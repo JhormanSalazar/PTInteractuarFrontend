@@ -1,0 +1,70 @@
+<div class="pagina">
+  <header class="pagina-header">
+    <div>
+      <h1>Solicitudes</h1>
+      <p class="pagina-subtitulo">Asignación de tareas a técnicos TI</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="abrirCrear()">+ Nueva solicitud</button>
+  </header>
+
+  <app-solicitudes-filtros />
+
+  <section class="pagina-contenido" aria-live="polite">
+    @switch (solicitudesService.status()) {
+      @case ('loading') {
+        <div class="surface">
+          <app-table-skeleton />
+        </div>
+      }
+      @case ('error') {
+        <div class="surface">
+          <app-error-state
+            [mensaje]="solicitudesService.errorMessage() ?? 'Ocurrió un error inesperado.'"
+            (reintentar)="reintentar()"
+          />
+        </div>
+      }
+      @default {
+        @if (solicitudesService.isEmpty()) {
+          <div class="surface">
+            <app-empty-state
+              titulo="No hay solicitudes con estos filtros"
+              descripcion="Prueba a cambiar los filtros de búsqueda o crea una nueva solicitud."
+            />
+          </div>
+        } @else {
+          <app-solicitudes-tabla
+            [solicitudes]="solicitudesService.solicitudes()"
+            (editar)="abrirEditar($event)"
+            (eliminar)="abrirEliminar($event)"
+          />
+
+          <nav class="paginacion" aria-label="Paginación de solicitudes">
+            <span class="paginacion-info">
+              Página {{ solicitudesService.meta().page }} de {{ solicitudesService.meta().totalPages }}
+              · {{ solicitudesService.meta().total }} solicitudes
+            </span>
+            <div class="paginacion-botones">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                [disabled]="solicitudesService.meta().page <= 1"
+                (click)="paginaAnterior()"
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                [disabled]="solicitudesService.meta().page >= solicitudesService.meta().totalPages"
+                (click)="paginaSiguiente()"
+              >
+                Siguiente
+              </button>
+            </div>
+          </nav>
+        }
+      }
+    }
+  </section>
+</div>

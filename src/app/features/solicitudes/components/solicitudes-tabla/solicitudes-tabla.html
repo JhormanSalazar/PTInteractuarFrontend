@@ -1,0 +1,49 @@
+<div class="tabla-scroll">
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th scope="col">Código</th>
+        <th scope="col">Título</th>
+        <th scope="col">Solicitante</th>
+        <th scope="col">Tipo de servicio</th>
+        <th scope="col">Técnico</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Prioridad</th>
+        <th scope="col">Creada</th>
+        <th scope="col"><span class="visually-hidden">Acciones</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (s of solicitudes(); track s.id) {
+        <tr>
+          <td class="celda-codigo">{{ s.codigo }}</td>
+          <td class="celda-titulo">{{ s.titulo }}</td>
+          <td>{{ s.solicitanteNombre }}</td>
+          <td>{{ s.tipoServicio.nombre }}</td>
+          <td>{{ s.tecnico ? s.tecnico.nombreCompleto : 'Sin asignar' }}</td>
+          <td><app-badge-estado [estado]="s.estado" /></td>
+          <td><app-badge-prioridad [prioridad]="s.prioridad" /></td>
+          <td>{{ formatearFecha(s.fechaCreacion) }}</td>
+          <td class="celda-acciones">
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              [attr.aria-label]="'Editar solicitud ' + s.codigo"
+              (click)="editar.emit(s)"
+            >
+              Editar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              [attr.aria-label]="'Eliminar solicitud ' + s.codigo"
+              (click)="eliminar.emit(s)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

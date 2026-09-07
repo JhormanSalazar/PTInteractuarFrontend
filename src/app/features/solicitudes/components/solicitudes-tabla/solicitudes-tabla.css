@@ -1,0 +1,61 @@
+.tabla-scroll {
+  overflow-x: auto;
+  /* Es un flex item dentro de .pagina-contenido (flex column): sin
+     min-width:0 no puede encogerse por debajo del ancho intrinseco de la
+     tabla, y en vez de mostrar scroll horizontal PROPIO empuja el ancho de
+     toda la pagina. */
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.tabla th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.tabla td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla tbody tr:hover {
+  background: var(--color-surface-hover);
+}
+
+.celda-codigo {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.celda-titulo {
+  white-space: normal;
+  max-width: 20rem;
+}
+
+.celda-acciones {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.btn-sm {
+  padding: 0.25rem var(--space-3);
+  font-size: var(--font-size-xs);
+}

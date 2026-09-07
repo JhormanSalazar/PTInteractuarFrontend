@@ -1,0 +1,25 @@
+<div class="dialog-shell" role="document">
+  <header class="dialog-header">
+    <h2 id="confirmar-eliminar-title">Eliminar solicitud</h2>
+    <button type="button" class="btn-icon btn-ghost" aria-label="Cerrar" (click)="cancelar()">✕</button>
+  </header>
+
+  <div class="dialog-body">
+    <p>
+      ¿Seguro que quieres eliminar la solicitud <strong>{{ solicitud.codigo }}</strong> —
+      "{{ solicitud.titulo }}"? Esta acción no se puede deshacer.
+    </p>
+  </div>
+
+  <footer class="dialog-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+    <button type="button" class="btn btn-danger" [disabled]="eliminando()" (click)="confirmar()">
+      @if (eliminando()) {
+        <span class="spinner" aria-hidden="true"></span>
+        Eliminando…
+      } @else {
+        Eliminar
+      }
+    </button>
+  </footer>
+</div>

@@ -1,0 +1,107 @@
+<div class="dialog-shell" role="document">
+  <header class="dialog-header">
+    <h2 id="solicitud-dialog-title">{{ titulo }}</h2>
+    <button type="button" class="btn-icon btn-ghost" aria-label="Cerrar" (click)="cancelar()">✕</button>
+  </header>
+
+  <form class="dialog-body" [formGroup]="form" (ngSubmit)="guardar()">
+    @if (erroresGenerales(); as mensaje) {
+      <p class="form-error-general" role="alert">{{ mensaje }}</p>
+    }
+
+    <app-campo-formulario label="Título" for="titulo" [error]="errorFor('titulo')">
+      <input
+        id="titulo"
+        type="text"
+        class="input"
+        [class.has-error]="errorFor('titulo')"
+        formControlName="titulo"
+        [attr.aria-invalid]="!!errorFor('titulo')"
+        [attr.aria-describedby]="errorFor('titulo') ? 'titulo-error' : null"
+      />
+    </app-campo-formulario>
+
+    <app-campo-formulario label="Solicitante" for="solicitanteNombre" [error]="errorFor('solicitanteNombre')">
+      <input
+        id="solicitanteNombre"
+        type="text"
+        class="input"
+        [class.has-error]="errorFor('solicitanteNombre')"
+        formControlName="solicitanteNombre"
+        [attr.aria-invalid]="!!errorFor('solicitanteNombre')"
+        [attr.aria-describedby]="errorFor('solicitanteNombre') ? 'solicitanteNombre-error' : null"
+      />
+    </app-campo-formulario>
+
+    <app-campo-formulario label="Descripción" for="descripcion" [error]="errorFor('descripcion')">
+      <textarea
+        id="descripcion"
+        class="textarea"
+        formControlName="descripcion"
+        rows="3"
+      ></textarea>
+    </app-campo-formulario>
+
+    <div class="form-row">
+      <app-campo-formulario label="Tipo de servicio" for="tipoServicioId" [error]="errorFor('tipoServicioId')">
+        <select
+          id="tipoServicioId"
+          class="select"
+          [class.has-error]="errorFor('tipoServicioId')"
+          formControlName="tipoServicioId"
+          [attr.aria-invalid]="!!errorFor('tipoServicioId')"
+          [attr.aria-describedby]="errorFor('tipoServicioId') ? 'tipoServicioId-error' : null"
+        >
+          <option [ngValue]="null" disabled>Selecciona un tipo de servicio</option>
+          @for (tipo of catalogos.tiposServicio(); track tipo.id) {
+            <option [ngValue]="tipo.id">{{ tipo.nombre }}</option>
+          }
+        </select>
+      </app-campo-formulario>
+
+      <app-campo-formulario label="Técnico (opcional)" for="tecnicoId">
+        <select id="tecnicoId" class="select" formControlName="tecnicoId">
+          <option [ngValue]="null">Sin asignar</option>
+          @for (tecnico of catalogos.tecnicos(); track tecnico.id) {
+            <option [ngValue]="tecnico.id">{{ tecnico.nombre }} {{ tecnico.apellido }}</option>
+          }
+        </select>
+      </app-campo-formulario>
+    </div>
+
+    <div class="form-row">
+      <app-campo-formulario label="Prioridad" for="prioridad">
+        <select id="prioridad" class="select" formControlName="prioridad">
+          @for (p of prioridades; track p) {
+            <option [ngValue]="p">{{ etiquetaPrioridad(p) }}</option>
+          }
+        </select>
+      </app-campo-formulario>
+
+      <app-campo-formulario
+        label="Fecha límite (opcional)"
+        for="fechaLimite"
+        hint="Hora local de tu navegador"
+      >
+        <input id="fechaLimite" type="datetime-local" class="input" formControlName="fechaLimite" />
+      </app-campo-formulario>
+    </div>
+  </form>
+
+  <footer class="dialog-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="form.invalid || guardando()"
+      (click)="guardar()"
+    >
+      @if (guardando()) {
+        <span class="spinner" aria-hidden="true"></span>
+        Guardando…
+      } @else {
+        {{ esEdicion ? 'Guardar cambios' : 'Crear solicitud' }}
+      }
+    </button>
+  </footer>
+</div>

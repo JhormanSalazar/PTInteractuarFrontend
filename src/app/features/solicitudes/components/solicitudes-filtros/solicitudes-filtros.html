@@ -1,0 +1,46 @@
+<div class="filtros" role="search">
+  <div class="filtros-busqueda">
+    <label class="visually-hidden" for="filtro-busqueda">Buscar por título o solicitante</label>
+    <input
+      id="filtro-busqueda"
+      type="search"
+      class="input"
+      placeholder="Buscar por título o solicitante…"
+      [formControl]="busqueda"
+    />
+  </div>
+
+  <div class="filtros-selects">
+    <label class="visually-hidden" for="filtro-estado">Filtrar por estado</label>
+    <select id="filtro-estado" class="select" (change)="onEstadoChange($any($event.target).value)">
+      <option value="">Todos los estados</option>
+      @for (e of ESTADOS; track e) {
+        <option [value]="e">{{ e }}</option>
+      }
+    </select>
+
+    <label class="visually-hidden" for="filtro-prioridad">Filtrar por prioridad</label>
+    <select id="filtro-prioridad" class="select" (change)="onPrioridadChange($any($event.target).value)">
+      <option value="">Todas las prioridades</option>
+      @for (p of PRIORIDADES; track p) {
+        <option [value]="p">{{ p }}</option>
+      }
+    </select>
+
+    <label class="visually-hidden" for="filtro-tecnico">Filtrar por técnico</label>
+    <select id="filtro-tecnico" class="select" (change)="onTecnicoChange($any($event.target).value)">
+      <option value="">Todos los técnicos</option>
+      @for (t of catalogos.tecnicos(); track t.id) {
+        <option [value]="t.id">{{ t.nombre }} {{ t.apellido }}</option>
+      }
+    </select>
+
+    <label class="visually-hidden" for="filtro-tipo">Filtrar por tipo de servicio</label>
+    <select id="filtro-tipo" class="select" (change)="onTipoServicioChange($any($event.target).value)">
+      <option value="">Todos los tipos de servicio</option>
+      @for (t of catalogos.tiposServicio(); track t.id) {
+        <option [value]="t.id">{{ t.nombre }}</option>
+      }
+    </select>
+  </div>
+</div>

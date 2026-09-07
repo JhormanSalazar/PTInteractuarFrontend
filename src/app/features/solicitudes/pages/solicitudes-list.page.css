@@ -1,0 +1,59 @@
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 80rem;
+  /* Un flex item por defecto no se encoge mas alla del ancho intrinseco de
+     su contenido (min-width: auto). La tabla de abajo es mas ancha que
+     375px; sin min-width:0 en toda esta cadena, la pagina entera crece para
+     acomodarla en vez de dejar que .tabla-scroll haga scroll horizontal por
+     su cuenta. Se repite en .pagina-contenido y .tabla-scroll por la misma
+     razon. Encontrado probando el layout a 375px con Playwright. */
+  min-width: 0;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+}
+
+.pagina-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.pagina-header h1 {
+  font-size: var(--font-size-2xl);
+}
+
+.pagina-subtitulo {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.pagina-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-2) var(--space-1);
+}
+
+.paginacion-info {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.paginacion-botones {
+  display: flex;
+  gap: var(--space-2);
+}
