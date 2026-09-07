@@ -1,0 +1,19 @@
+.health-check {
+  font-family: system-ui, sans-serif;
+  max-width: 32rem;
+  margin: 4rem auto;
+  text-align: center;
+}
+
+.ok {
+  color: #16a34a;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.timestamp {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
