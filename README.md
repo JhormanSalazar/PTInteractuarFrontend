@@ -135,7 +135,10 @@ No requiere backend real ni base de datos: todos los tests usan `provideHttpClie
 
 ## URLs de producción
 
-- Frontend: _pendiente de despliegue — bloqueado por falta de sesión en la Vercel CLI en esta
-  máquina (`vercel whoami` → `Logged out`). Ver el reporte del bloque para las instrucciones
-  exactas._
-- Backend: ver README de `PTInteractuarBackend` (mismo bloqueo).
+- Frontend: <https://interactuar-frontend.vercel.app>
+- Backend: <https://interactuar-backend.vercel.app>
+- Documentación interactiva de la API (Swagger UI): <https://interactuar-backend.vercel.app/api/docs>
+- Health check: <https://interactuar-backend.vercel.app/api/v1/health>
+
+La URL del backend se compila dentro del bundle (`src/environments/environment.ts`), así que
+cambiarla exige reconstruir y redesplegar el frontend.
