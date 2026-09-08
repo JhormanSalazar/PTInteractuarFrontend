@@ -8,12 +8,14 @@ import {
   signal,
 } from '@angular/core';
 import type { Solicitud } from '../../../../core/models/solicitud.model';
+import { Icon } from '../../../../shared/ui/icon/icon';
 import { forzarFocoInicialDialog } from '../../../../shared/utils/forzar-foco-dialog';
 import { SolicitudesService } from '../../data/solicitudes.service';
 
 @Component({
   selector: 'app-confirmar-eliminar-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [Icon],
   templateUrl: './confirmar-eliminar-dialog.html',
 })
 export class ConfirmarEliminarDialog implements AfterViewInit {

@@ -83,6 +83,27 @@ describe('SolicitudFormDialog — validaciones', () => {
     expect(component['errorFor']('titulo')).toBe('Este campo es obligatorio.');
   });
 
+  it('descripcion rechaza mas de 2000 caracteres, el limite del backend', () => {
+    const control = component['form'].controls.descripcion;
+    control.setValue('x'.repeat(2000));
+    expect(control.hasError('maxlength')).toBe(false);
+    control.setValue('x'.repeat(2001));
+    expect(control.hasError('maxlength')).toBe(true);
+  });
+
+  it('titulo rechaza mas de 120 caracteres', () => {
+    const control = component['form'].controls.titulo;
+    control.setValue('x'.repeat(121));
+    expect(control.hasError('maxlength')).toBe(true);
+  });
+
+  it('errorFor traduce el exceso de longitud a un mensaje en español', () => {
+    const control = component['form'].controls.descripcion;
+    control.markAsTouched();
+    control.setValue('x'.repeat(2001));
+    expect(component['errorFor']('descripcion')).toBe('No puede superar los 2000 caracteres.');
+  });
+
   it('un 422 del backend pinta el error sobre el campo correspondiente, no en un toast', async () => {
     component['form'].setValue({
       titulo: 'Título de prueba válido',

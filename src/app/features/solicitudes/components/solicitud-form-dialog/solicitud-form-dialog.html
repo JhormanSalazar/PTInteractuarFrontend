@@ -1,7 +1,9 @@
 <div class="dialog-shell" role="document">
   <header class="dialog-header">
     <h2 id="solicitud-dialog-title">{{ titulo }}</h2>
-    <button type="button" class="btn-icon btn-ghost" aria-label="Cerrar" (click)="cancelar()">✕</button>
+    <button type="button" class="btn-icon btn-ghost" aria-label="Cerrar" (click)="cancelar()">
+      <app-icon name="x" [size]="18" />
+    </button>
   </header>
 
   <form class="dialog-body" [formGroup]="form" (ngSubmit)="guardar()">
@@ -9,36 +11,65 @@
       <p class="form-error-general" role="alert">{{ mensaje }}</p>
     }
 
-    <app-campo-formulario label="Título" for="titulo" [error]="errorFor('titulo')">
+    <app-campo-formulario
+      label="Título"
+      for="titulo"
+      [error]="errorFor('titulo')"
+      hint="Entre 5 y 120 caracteres"
+      [max]="LIMITES.titulo"
+      [valor]="form.controls.titulo.value"
+    >
       <input
         id="titulo"
         type="text"
         class="input"
         [class.has-error]="errorFor('titulo')"
+        [maxlength]="LIMITES.titulo"
         formControlName="titulo"
         [attr.aria-invalid]="!!errorFor('titulo')"
-        [attr.aria-describedby]="errorFor('titulo') ? 'titulo-error' : null"
+        [attr.aria-describedby]="errorFor('titulo') ? 'titulo-error' : 'titulo-hint'"
       />
     </app-campo-formulario>
 
-    <app-campo-formulario label="Solicitante" for="solicitanteNombre" [error]="errorFor('solicitanteNombre')">
+    <app-campo-formulario
+      label="Solicitante"
+      for="solicitanteNombre"
+      [error]="errorFor('solicitanteNombre')"
+      hint="Entre 3 y 120 caracteres"
+      [max]="LIMITES.solicitanteNombre"
+      [valor]="form.controls.solicitanteNombre.value"
+    >
       <input
         id="solicitanteNombre"
         type="text"
         class="input"
         [class.has-error]="errorFor('solicitanteNombre')"
+        [maxlength]="LIMITES.solicitanteNombre"
         formControlName="solicitanteNombre"
         [attr.aria-invalid]="!!errorFor('solicitanteNombre')"
-        [attr.aria-describedby]="errorFor('solicitanteNombre') ? 'solicitanteNombre-error' : null"
+        [attr.aria-describedby]="
+          errorFor('solicitanteNombre') ? 'solicitanteNombre-error' : 'solicitanteNombre-hint'
+        "
       />
     </app-campo-formulario>
 
-    <app-campo-formulario label="Descripción" for="descripcion" [error]="errorFor('descripcion')">
+    <app-campo-formulario
+      label="Descripción"
+      for="descripcion"
+      [error]="errorFor('descripcion')"
+      hint="Opcional · máximo 2000 caracteres"
+      [max]="LIMITES.descripcion"
+      [valor]="form.controls.descripcion.value"
+    >
       <textarea
         id="descripcion"
         class="textarea"
+        [class.has-error]="errorFor('descripcion')"
+        [maxlength]="LIMITES.descripcion"
         formControlName="descripcion"
         rows="3"
+        [attr.aria-invalid]="!!errorFor('descripcion')"
+        [attr.aria-describedby]="errorFor('descripcion') ? 'descripcion-error' : 'descripcion-hint'"
       ></textarea>
     </app-campo-formulario>
 

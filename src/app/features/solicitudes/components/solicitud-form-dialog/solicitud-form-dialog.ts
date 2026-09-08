@@ -10,21 +10,32 @@ import {
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CampoFormulario } from '../../../../shared/ui/campo-formulario/campo-formulario';
+import { Icon } from '../../../../shared/ui/icon/icon';
 import { forzarFocoInicialDialog } from '../../../../shared/utils/forzar-foco-dialog';
 import { CatalogosService } from '../../../../core/services/catalogos.service';
 import { AppHttpError } from '../../../../core/models/problem-details.model';
+import { ETIQUETAS_PRIORIDAD } from '../../../../core/models/etiquetas';
 import type { Prioridad, Solicitud } from '../../../../core/models/solicitud.model';
 import { PRIORIDADES } from '../../../../core/models/solicitud.model';
 import { SolicitudesService } from '../../data/solicitudes.service';
 
 export type SolicitudFormDialogData = { mode: 'create' } | { mode: 'edit'; solicitud: Solicitud };
 
-const ETIQUETAS_PRIORIDAD: Record<Prioridad, string> = {
-  BAJA: 'Baja',
-  MEDIA: 'Media',
-  ALTA: 'Alta',
-  CRITICA: 'Crítica',
-};
+/**
+ * Longitudes maximas, replicadas del contrato del backend
+ * (solicitudes.schemas.ts) y de los CHECK de la tabla. Se usan para tres
+ * cosas a la vez: el atributo maxlength del control, el contador que ve el
+ * usuario y el validador de Angular.
+ *
+ * El atributo maxlength es lo que evita el problema de verdad: impide escribir
+ * o pegar de mas, asi que el usuario no llega a enviar un valor invalido. El
+ * validador queda como red de seguridad para valores puestos por codigo.
+ */
+export const LIMITES = {
+  titulo: 120,
+  solicitanteNombre: 120,
+  descripcion: 2000,
+} as const;
 
 function isoToDatetimeLocal(iso: string | null): string {
   if (!iso) return '';
@@ -43,7 +54,7 @@ function datetimeLocalToIso(value: string): string | null {
 @Component({
   selector: 'app-solicitud-form-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, CampoFormulario],
+  imports: [ReactiveFormsModule, CampoFormulario, Icon],
   templateUrl: './solicitud-form-dialog.html',
   styleUrl: './solicitud-form-dialog.css',
 })
@@ -55,6 +66,7 @@ export class SolicitudFormDialog implements OnInit, AfterViewInit {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   protected readonly catalogos = inject(CatalogosService);
 
+  protected readonly LIMITES = LIMITES;
   protected readonly prioridades = PRIORIDADES;
   protected readonly etiquetaPrioridad = (p: Prioridad) => ETIQUETAS_PRIORIDAD[p];
   protected readonly guardando = signal(false);
@@ -66,12 +78,20 @@ export class SolicitudFormDialog implements OnInit, AfterViewInit {
     : 'Nueva solicitud';
 
   protected readonly form = this.fb.group({
-    titulo: this.fb.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]),
-    descripcion: this.fb.control(''),
+    titulo: this.fb.control('', [
+      Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(LIMITES.titulo),
+    ]),
+    // Le faltaba el maxLength: el backend rechaza descripciones de mas de 2000
+    // caracteres, pero el formulario las dejaba enviar y el usuario recibia el
+    // mensaje crudo de Zod ("Too big: expected string to have <=2000
+    // characters"), en ingles y sin contexto.
+    descripcion: this.fb.control('', [Validators.maxLength(LIMITES.descripcion)]),
     solicitanteNombre: this.fb.control('', [
       Validators.required,
       Validators.minLength(3),
-      Validators.maxLength(120),
+      Validators.maxLength(LIMITES.solicitanteNombre),
     ]),
     tecnicoId: this.fb.control<number | null>(null),
     tipoServicioId: this.fb.control<number | null>(null, [Validators.required]),

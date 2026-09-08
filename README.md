@@ -49,14 +49,25 @@ el backend esté corriendo en `http://localhost:3000` (ver su README — necesit
 - **Crear / editar**: mismo componente de modal (`SolicitudFormDialog`) en los dos modos,
   formulario reactivo tipado cuyas validaciones replican las del backend (`min`/`max` de
   longitud, campos obligatorios), con los errores del servidor (400/422) pintados sobre el
-  campo exacto que los causó — nunca en un toast genérico.
-- **Eliminar**: modal de confirmación (`ConfirmarEliminarDialog`) que nombra la solicitud
-  concreta; `Escape` cancela.
+  campo exacto que los causó — nunca en un toast genérico. Cada campo de texto muestra su límite
+  y un contador `n/máx` en vivo, y lleva `maxlength` nativo: el usuario no llega a escribir de
+  más, en vez de descubrirlo al enviar.
+- **Cambiar estado**: modal propio (`CambiarEstadoDialog`) que llama a
+  `PATCH /solicitudes/:id/estado`. Es una operación aparte de la edición porque el backend le
+  aplica su regla de negocio y registra el cambio en el historial — por eso el contrato de
+  actualización ni siquiera acepta `estado`. Los estados que exigen técnico (`Asignada`,
+  `En proceso`) aparecen deshabilitados y con el motivo cuando la solicitud no lo tiene; si el
+  backend rechaza el cambio igualmente (409), el modal se queda abierto mostrando por qué.
+- **Eliminar**: modal de confirmación (`ConfirmarEliminarDialog`) en formato vertical —icono de
+  peligro, título, la solicitud concreta y la advertencia de irreversibilidad, en columna— que
+  nombra código y título; `Escape` cancela.
+- **Acciones por fila**: tres botones solo-icono (cambiar estado, editar, eliminar) con tooltip
+  nativo y `aria-label`, bajo una columna «Acciones» con cabecera visible.
 - **Manejo de errores**: tres interceptores (`baseUrlInterceptor`, `loadingInterceptor`,
   `errorInterceptor`) — el último traduce el Problem Details del backend a un `AppHttpError`
   tipado; ningún componente ve un `HttpErrorResponse` ni un JSON crudo.
 - **Indicador de carga global** y aviso de "el entorno de demo puede estar despertando" si una
-  petición tarda más de 2.5s (cold start de Neon).
+  petición tarda más de 1.2s (cold start de Neon).
 - **Ping de calentamiento** a `/health` al arrancar, en segundo plano, silencioso si falla.
 - **Pie de demostración** (`DemoFooter`): un botón discreto que llama a `POST /demo/reset` del
   backend, con modal de confirmación previo y toast al terminar. Está para que la demo pública no
@@ -95,6 +106,17 @@ primarias, y colores semánticos consistentes para los badges de estado y priori
 a mano contra WCAG AA). `prefers-reduced-motion` desactiva todas las transiciones. El
 justificativo completo está en el reporte del bloque y en el entregable.
 
+### Iconos
+
+Los iconos son de [Lucide](https://lucide.dev) (licencia ISC), pero **no** vía el paquete
+`lucide-angular`: su versión más reciente (1.0.0) declara como peer dependency
+`"@angular/core": "13.x - 21.x"` y este proyecto va en Angular 22, así que instalarlo obligaría a
+`npm install --legacy-peer-deps` y rompería el arranque documentado más arriba. En su lugar,
+`src/app/shared/ui/icon/icon.ts` embebe los trazados de Lucide en un componente propio: mismo
+lenguaje visual (rejilla 24×24, trazo de 2, extremos redondeados), sin dependencia y sin sumar al
+bundle más que los seis iconos en uso. Para agregar uno nuevo se copian los atributos `d` de su
+SVG en lucide.dev.
+
 ## Scripts npm
 
 | Script | Qué hace |
@@ -116,10 +138,15 @@ No requiere backend real ni base de datos: todos los tests usan `provideHttpClie
 (`HttpTestingController`) para interceptar las peticiones con respuestas simuladas. Cubren:
 
 - `ApiService` (métodos, URLs y query params exactos que arma cada llamada).
-- Validaciones del formulario reactivo de `SolicitudFormDialog`, incluido el mapeo de un error
-  422 del backend al campo correspondiente.
+- Validaciones del formulario reactivo de `SolicitudFormDialog`, incluidos los límites de
+  longitud y el mapeo de un error 422 del backend al campo correspondiente.
+- `CambiarEstadoDialog`: qué estados quedan bloqueados sin técnico, que confirmar llame al
+  servicio con el estado elegido, y que un 409 deje el modal abierto con el motivo.
+- `SolicitudesTabla`: la cabecera «Acciones», que los botones solo-icono conserven nombre
+  accesible y tooltip, y que cada uno emita su evento.
 - Los cuatro estados visuales del listado (`SolicitudesListPage`), inyectando un
   `SolicitudesService` simulado en cada caso.
+- `DemoFooter`: restaurar, cancelar, ocultarse ante un 404 y avisar ante otros errores.
 - El componente raíz (`App`): dispara el ping a `/health` y no se rompe si falla.
 
 ## Problemas frecuentes

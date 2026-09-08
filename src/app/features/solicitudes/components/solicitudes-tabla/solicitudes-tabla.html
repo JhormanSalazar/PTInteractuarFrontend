@@ -10,7 +10,7 @@
         <th scope="col">Estado</th>
         <th scope="col">Prioridad</th>
         <th scope="col">Creada</th>
-        <th scope="col"><span class="visually-hidden">Acciones</span></th>
+        <th scope="col" class="columna-acciones">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -27,19 +27,30 @@
           <td class="celda-acciones">
             <button
               type="button"
-              class="btn btn-secondary btn-sm"
-              [attr.aria-label]="'Editar solicitud ' + s.codigo"
-              (click)="editar.emit(s)"
+              class="btn-accion"
+              [title]="'Cambiar estado de ' + s.codigo"
+              [attr.aria-label]="'Cambiar estado de la solicitud ' + s.codigo"
+              (click)="cambiarEstado.emit(s)"
             >
-              Editar
+              <app-icon name="refresh-cw" />
             </button>
             <button
               type="button"
-              class="btn btn-danger btn-sm"
+              class="btn-accion"
+              [title]="'Editar ' + s.codigo"
+              [attr.aria-label]="'Editar solicitud ' + s.codigo"
+              (click)="editar.emit(s)"
+            >
+              <app-icon name="pencil" />
+            </button>
+            <button
+              type="button"
+              class="btn-accion btn-accion--peligro"
+              [title]="'Eliminar ' + s.codigo"
               [attr.aria-label]="'Eliminar solicitud ' + s.codigo"
               (click)="eliminar.emit(s)"
             >
-              Eliminar
+              <app-icon name="trash-2" />
             </button>
           </td>
         </tr>

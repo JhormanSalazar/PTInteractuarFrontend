@@ -1,0 +1,73 @@
+<div class="dialog-shell" role="document">
+  <header class="dialog-header">
+    <h2 id="cambiar-estado-title">Cambiar estado — {{ solicitud.codigo }}</h2>
+    <button type="button" class="btn-icon btn-ghost" aria-label="Cerrar" (click)="cancelar()">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </header>
+
+  <div class="dialog-body">
+    @if (error(); as mensaje) {
+      <p class="form-error-general" role="alert">{{ mensaje }}</p>
+    }
+
+    <p class="estado-contexto">
+      «{{ solicitud.titulo }}»<br />
+      Técnico: <strong>{{ solicitud.tecnico ? solicitud.tecnico.nombreCompleto : 'sin asignar' }}</strong>
+    </p>
+
+    <fieldset class="estado-opciones">
+      <legend class="visually-hidden">Nuevo estado de la solicitud</legend>
+
+      @for (e of estados; track e) {
+        <label
+          class="estado-opcion"
+          [class.estado-opcion--activa]="seleccionado() === e"
+          [class.estado-opcion--bloqueada]="bloqueado(e)"
+        >
+          <input
+            type="radio"
+            name="estado"
+            [value]="e"
+            [checked]="seleccionado() === e"
+            [disabled]="bloqueado(e)"
+            (change)="seleccionar(e)"
+          />
+          <span class="estado-opcion-texto">
+            {{ etiqueta(e) }}
+            @if (e === solicitud.estado) {
+              <span class="estado-opcion-actual">actual</span>
+            }
+          </span>
+          @if (bloqueado(e)) {
+            <span class="estado-opcion-motivo">Requiere un técnico asignado</span>
+          }
+        </label>
+      }
+    </fieldset>
+
+    @if (!tieneTecnico) {
+      <p class="estado-ayuda">
+        Para pasar a <strong>Asignada</strong> o <strong>En proceso</strong>, primero asigna un técnico
+        desde <strong>Editar</strong>.
+      </p>
+    }
+  </div>
+
+  <footer class="dialog-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="sinCambios() || guardando()"
+      (click)="confirmar()"
+    >
+      @if (guardando()) {
+        <span class="spinner" aria-hidden="true"></span>
+        Guardando…
+      } @else {
+        Cambiar estado
+      }
+    </button>
+  </footer>
+</div>

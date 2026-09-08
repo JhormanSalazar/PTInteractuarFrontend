@@ -4,7 +4,10 @@
       <h1>Solicitudes</h1>
       <p class="pagina-subtitulo">Asignación de tareas a técnicos TI</p>
     </div>
-    <button type="button" class="btn btn-primary" (click)="abrirCrear()">+ Nueva solicitud</button>
+    <button type="button" class="btn btn-primary" (click)="abrirCrear()">
+      <app-icon name="plus" [size]="18" />
+      Nueva solicitud
+    </button>
   </header>
 
   <app-solicitudes-filtros />
@@ -35,6 +38,7 @@
         } @else {
           <app-solicitudes-tabla
             [solicitudes]="solicitudesService.solicitudes()"
+            (cambiarEstado)="abrirCambiarEstado($event)"
             (editar)="abrirEditar($event)"
             (eliminar)="abrirEliminar($event)"
           />

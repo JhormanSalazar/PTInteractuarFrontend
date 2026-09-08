@@ -10,6 +10,7 @@ import type {
   Solicitud,
   UpdateSolicitudPayload,
 } from '../../../core/models/solicitud.model';
+import { ETIQUETAS_ESTADO } from '../../../core/models/etiquetas';
 import { ToastService } from '../../../core/services/toast.service';
 
 export interface SolicitudesFiltros {
@@ -94,6 +95,23 @@ export class SolicitudesService {
   async actualizar(id: number, payload: UpdateSolicitudPayload): Promise<Solicitud> {
     const actualizada = await firstValueFrom(this.api.updateSolicitud(id, payload));
     this.toast.success(`Solicitud ${actualizada.codigo} actualizada correctamente.`);
+    this.cargar();
+    return actualizada;
+  }
+
+  /**
+   * Cambia solo el estado, via PATCH /solicitudes/:id/estado. Es una operacion
+   * aparte del PUT a proposito: el backend le aplica su propia regla de negocio
+   * (no se puede pasar a ASIGNADA o EN_PROCESO sin tecnico) y registra el
+   * cambio en el historial de la solicitud, cosa que una edicion normal no
+   * hace. Por eso el contrato de actualizacion ni siquiera acepta "estado".
+   *
+   * Relanza el error para que el dialogo que lo llama pueda quedarse abierto y
+   * mostrar el motivo del rechazo junto a la seleccion.
+   */
+  async cambiarEstado(solicitud: Solicitud, estado: Estado): Promise<Solicitud> {
+    const actualizada = await firstValueFrom(this.api.patchEstadoSolicitud(solicitud.id, { estado }));
+    this.toast.success(`Solicitud ${actualizada.codigo} pasó a ${ETIQUETAS_ESTADO[estado]}.`);
     this.cargar();
     return actualizada;
   }

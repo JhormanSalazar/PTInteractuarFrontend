@@ -131,6 +131,52 @@ button {
   padding: var(--space-2);
 }
 
+/* ---------- Acciones de fila ----------
+   Botones solo-icono para las acciones de cada fila de la tabla. Empiezan
+   discretos (fondo transparente, icono atenuado) para no convertir la columna
+   en un muro de color que compita con los datos, y toman su color al pasar el
+   raton o al recibir el foco. Cada uno lleva title y aria-label: el primero da
+   el tooltip nativo del navegador, el segundo hace que el boton sea anunciable
+   por un lector de pantalla, que sin texto visible no tendria nombre. */
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  color: var(--color-text-subtle);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.btn-accion:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* El foco lo pinta la regla global :focus-visible (box-shadow con
+   --focus-ring). No se redefine aqui: dos anillos distintos en el mismo sitio
+   se ven como un error de estilo, no como enfasis. */
+
+.btn-accion:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-accion--peligro:hover:not(:disabled) {
+  background: var(--color-danger-soft);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
 /* ---------- Controles de formulario ---------- */
 .field {
   display: flex;
@@ -152,6 +198,31 @@ button {
 .field-error {
   font-size: var(--font-size-xs);
   color: var(--color-danger);
+}
+
+/* Pie del campo: ayuda o error a la izquierda, contador de caracteres a la
+   derecha. El gap y el align-items evitan que un error largo empuje o parta
+   el contador. */
+.field-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.field-contador {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-subtle);
+}
+
+/* Al tocar el maximo el contador se vuelve de advertencia. No es un error
+   —el campo sigue siendo valido— asi que usa el color de texto atenuado
+   fuerte y no el rojo de peligro, reservado para lo que si bloquea. */
+.field-contador--limite {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-medium);
 }
 
 .input,
@@ -283,6 +354,83 @@ button {
   padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
+}
+
+/* ---------- Variante centrada del dialogo ----------
+   Para confirmaciones destructivas. El diseno normal (cabecera con titulo a la
+   izquierda + cuerpo) funciona bien para formularios, pero en una confirmacion
+   reparte la atencion en horizontal justo cuando hace falta lo contrario: una
+   sola columna que se lee de arriba abajo —icono, que va a pasar, a que
+   elemento, que es irreversible— para que nadie confirme un borrado sin haber
+   leido a que registro apunta. */
+.dialog-shell--centrado {
+  position: relative;
+}
+
+.dialog-cerrar {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 1;
+}
+
+.dialog-body--centrado {
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  text-align: center;
+}
+
+.dialog-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-1);
+}
+
+.dialog-icono--info {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.dialog-icono--peligro {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.dialog-titulo-centrado {
+  font-size: var(--font-size-lg);
+  line-height: 1.3;
+}
+
+.dialog-descripcion {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* La frase irreversible se separa del resto y toma el color de peligro: es la
+   parte que el usuario tiene que registrar antes de pulsar. */
+.dialog-advertencia {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-danger);
+}
+
+/* Botones a ancho completo y repartidos: en una confirmacion centrada, un par
+   de botones pegados a la derecha rompe el eje vertical que se acaba de
+   construir. */
+.dialog-footer--centrado {
+  justify-content: stretch;
+  border-top: none;
+  padding-top: 0;
+}
+
+.dialog-footer--centrado .btn {
+  flex: 1;
+  justify-content: center;
 }
 
 .form-row {

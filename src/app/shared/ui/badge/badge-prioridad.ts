@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { Prioridad } from '../../../core/models/solicitud.model';
-
-const ETIQUETAS: Record<Prioridad, string> = {
-  BAJA: 'Baja',
-  MEDIA: 'Media',
-  ALTA: 'Alta',
-  CRITICA: 'Crítica',
-};
+import { ETIQUETAS_PRIORIDAD } from '../../../core/models/etiquetas';
 
 @Component({
   selector: 'app-badge-prioridad',
@@ -35,5 +29,5 @@ const ETIQUETAS: Record<Prioridad, string> = {
 })
 export class BadgePrioridad {
   readonly prioridad = input.required<Prioridad>();
-  protected readonly etiqueta = () => ETIQUETAS[this.prioridad()];
+  protected readonly etiqueta = () => ETIQUETAS_PRIORIDAD[this.prioridad()];
 }

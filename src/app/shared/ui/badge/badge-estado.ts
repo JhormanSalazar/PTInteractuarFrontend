@@ -1,13 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import type { Estado } from '../../../core/models/solicitud.model';
-
-const ETIQUETAS: Record<Estado, string> = {
-  PENDIENTE: 'Pendiente',
-  ASIGNADA: 'Asignada',
-  EN_PROCESO: 'En proceso',
-  RESUELTA: 'Resuelta',
-  CANCELADA: 'Cancelada',
-};
+import { ETIQUETAS_ESTADO } from '../../../core/models/etiquetas';
 
 @Component({
   selector: 'app-badge-estado',
@@ -40,5 +33,5 @@ const ETIQUETAS: Record<Estado, string> = {
 })
 export class BadgeEstado {
   readonly estado = input.required<Estado>();
-  protected readonly etiqueta = () => ETIQUETAS[this.estado()];
+  protected readonly etiqueta = () => ETIQUETAS_ESTADO[this.estado()];
 }

@@ -54,7 +54,8 @@ export class DemoFooter {
       data: {
         titulo: 'Restaurar datos de ejemplo',
         mensaje:
-          'Se borrarán todas las solicitudes actuales y se volverá a cargar el conjunto de datos de demostración. Esta acción no se puede deshacer.',
+          'Se borrarán todas las solicitudes actuales y se volverá a cargar el conjunto de datos de demostración.',
+        advertencia: 'Esta acción no se puede deshacer.',
         textoConfirmar: 'Restaurar',
         varianteConfirmar: 'btn-danger',
       },

@@ -4,6 +4,8 @@ import type { Solicitud } from '../../../core/models/solicitud.model';
 import { EmptyState } from '../../../shared/ui/empty-state/empty-state';
 import { ErrorState } from '../../../shared/ui/empty-state/error-state';
 import { TableSkeleton } from '../../../shared/ui/skeleton/table-skeleton';
+import { Icon } from '../../../shared/ui/icon/icon';
+import { CambiarEstadoDialog } from '../components/cambiar-estado-dialog/cambiar-estado-dialog';
 import { ConfirmarEliminarDialog } from '../components/confirmar-eliminar-dialog/confirmar-eliminar-dialog';
 import { SolicitudesFiltros } from '../components/solicitudes-filtros/solicitudes-filtros';
 import { SolicitudFormDialog, type SolicitudFormDialogData } from '../components/solicitud-form-dialog/solicitud-form-dialog';
@@ -13,7 +15,7 @@ import { SolicitudesService } from '../data/solicitudes.service';
 @Component({
   selector: 'app-solicitudes-list-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SolicitudesFiltros, SolicitudesTabla, TableSkeleton, EmptyState, ErrorState],
+  imports: [SolicitudesFiltros, SolicitudesTabla, TableSkeleton, EmptyState, ErrorState, Icon],
   templateUrl: './solicitudes-list.page.html',
   styleUrl: './solicitudes-list.page.css',
 })
@@ -54,6 +56,15 @@ export class SolicitudesListPage implements OnInit {
       data: { mode: 'edit', solicitud },
       panelClass: 'dialog-panel',
       ariaLabelledBy: 'solicitud-dialog-title',
+    });
+  }
+
+  protected abrirCambiarEstado(solicitud: Solicitud): void {
+    if (this.hayDialogoAbierto()) return;
+    this.dialog.open<boolean, Solicitud>(CambiarEstadoDialog, {
+      data: solicitud,
+      panelClass: 'dialog-panel',
+      ariaLabelledBy: 'cambiar-estado-title',
     });
   }
 
