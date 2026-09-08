@@ -1,11 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Frontend</title>
+    <title>Solicitudes de servicio</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Gestión de solicitudes de servicio técnico: creación, asignación a técnicos, seguimiento de estado y prioridad."
+    />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- El backend vive en otro origen y corre sobre un plan gratuito que
+         suspende el computo por inactividad. Abrir la conexion (DNS + TCP + TLS)
+         en cuanto se parsea el <head>, antes de que el bundle de JavaScript se
+         descargue y ejecute, le quita ese trabajo del camino critico a la
+         primera peticion real. -->
+    <link rel="preconnect" href="https://interactuar-backend.vercel.app" crossorigin />
+    <link rel="dns-prefetch" href="https://interactuar-backend.vercel.app" />
   </head>
   <body>
     <app-root></app-root>
