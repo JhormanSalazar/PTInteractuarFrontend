@@ -28,6 +28,13 @@ interface HealthResponse {
   timestamp: string;
 }
 
+export interface DemoResetResponse {
+  mensaje: string;
+  tecnicos: number;
+  tiposServicio: number;
+  solicitudes: number;
+}
+
 /**
  * Unico punto de contacto con HttpClient en toda la app (ver reglas del
  * bloque). Usa rutas relativas: el baseUrlInterceptor las resuelve contra
@@ -82,5 +89,14 @@ export class ApiService {
 
   getHealth(): Observable<HealthResponse> {
     return this.http.get<HealthResponse>('/health');
+  }
+
+  /**
+   * Restaura los datos de ejemplo del entorno de demostracion. Responde 404
+   * cuando el backend corre con DEMO_MODE=false: en ese caso la ruta no existe
+   * y el boton que la invoca se oculta.
+   */
+  resetDemo(): Observable<DemoResetResponse> {
+    return this.http.post<DemoResetResponse>('/demo/reset', {});
   }
 }

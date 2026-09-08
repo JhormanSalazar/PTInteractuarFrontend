@@ -1,0 +1,22 @@
+<div class="dialog-shell" role="document">
+  <header class="dialog-header">
+    <h2 id="confirmar-dialog-title">{{ data.titulo }}</h2>
+    <button type="button" class="btn-icon btn-ghost" aria-label="Cerrar" (click)="cerrar(false)">✕</button>
+  </header>
+
+  <div class="dialog-body">
+    <p>{{ data.mensaje }}</p>
+  </div>
+
+  <footer class="dialog-footer">
+    <button type="button" class="btn btn-secondary" (click)="cerrar(false)">Cancelar</button>
+    <button
+      type="button"
+      class="btn"
+      [class]="'btn ' + (data.varianteConfirmar ?? 'btn-primary')"
+      (click)="cerrar(true)"
+    >
+      {{ data.textoConfirmar }}
+    </button>
+  </footer>
+</div>

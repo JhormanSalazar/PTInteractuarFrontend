@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './core/http/api.service';
+import { DemoFooter } from './shared/ui/demo-footer/demo-footer';
 import { LoadingBanner } from './shared/ui/loading-banner/loading-banner';
 import { ToastHost } from './shared/ui/toast/toast-host';
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, LoadingBanner, ToastHost],
+  imports: [RouterOutlet, LoadingBanner, DemoFooter, ToastHost],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

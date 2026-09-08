@@ -58,6 +58,10 @@ el backend esté corriendo en `http://localhost:3000` (ver su README — necesit
 - **Indicador de carga global** y aviso de "el entorno de demo puede estar despertando" si una
   petición tarda más de 2.5s (cold start de Neon).
 - **Ping de calentamiento** a `/health` al arrancar, en segundo plano, silencioso si falla.
+- **Pie de demostración** (`DemoFooter`): un botón discreto que llama a `POST /demo/reset` del
+  backend, con modal de confirmación previo y toast al terminar. Está para que la demo pública no
+  quede vacía después de que alguien pruebe el borrado. Si el backend corre con `DEMO_MODE=false`
+  la ruta responde `404` y el pie se oculta solo.
 
 ## Apuntar el frontend al backend
 
