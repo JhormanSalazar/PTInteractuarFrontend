@@ -1,6 +1,19 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-const SLOW_REQUEST_MS = 2500;
+/**
+ * Umbral a partir del cual una peticion se considera "lenta" y se muestra el
+ * aviso de que el entorno esta despertando.
+ *
+ * Estaba en 2500ms, calculado a ojo. Medido contra el despliegue real, el
+ * arranque en frio de Neon tarda ~1.9s en responder: con el umbral en 2500ms
+ * el aviso aparecia justo cuando la peticion ya estaba a punto de terminar, o
+ * directamente no llegaba a aparecer, que es el peor de los dos mundos —el
+ * usuario se come toda la espera sin explicacion y luego ve un mensaje que ya
+ * no aplica. A 1200ms el aviso sale mientras la espera todavia esta
+ * ocurriendo, que es cuando sirve de algo, y sigue por encima del tiempo de
+ * una peticion normal en caliente (~400ms) para no aparecer en cada clic.
+ */
+const SLOW_REQUEST_MS = 1200;
 
 /**
  * Contador de peticiones activas para el indicador de carga global. Ademas

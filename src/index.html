@@ -18,6 +18,29 @@
          primera peticion real. -->
     <link rel="preconnect" href="https://interactuar-backend.vercel.app" crossorigin />
     <link rel="dns-prefetch" href="https://interactuar-backend.vercel.app" />
+
+    <!-- Ping de calentamiento adelantado.
+         La aplicacion ya lanza uno a /health al arrancar (App), pero eso ocurre
+         despues de descargar, parsear y ejecutar el bundle: medido contra el
+         despliegue real, cerca de un segundo mas tarde. Como lo caro del
+         arranque en frio es despertar el computo de Neon (~1.9s medidos), ese
+         segundo se paga integro y en serie.
+         Disparandolo aqui, en el <head>, el despertar de la base ocurre EN
+         PARALELO con la descarga del bundle en vez de despues, y cuando la
+         aplicacion pide los datos la base ya esta despierta.
+         Es best-effort: si falla no pasa nada, la aplicacion se encarga igual.
+         Solo se dispara en el dominio desplegado, para no golpear el backend de
+         produccion desde una sesion de desarrollo local. -->
+    <script>
+      if (location.hostname.endsWith('.vercel.app')) {
+        fetch('https://interactuar-backend.vercel.app/api/v1/health', {
+          mode: 'cors',
+          cache: 'no-store',
+        }).catch(function () {
+          /* silencioso a proposito: es una optimizacion, no una dependencia */
+        });
+      }
+    </script>
   </head>
   <body>
     <app-root></app-root>
