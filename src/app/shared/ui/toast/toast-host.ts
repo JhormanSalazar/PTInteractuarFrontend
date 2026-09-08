@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ToastService } from '../../../core/services/toast.service';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-toast-host',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [Icon],
   template: `
     <div class="toast-host" aria-live="polite" aria-atomic="true">
       @for (toast of toastService.toasts(); track toast.id) {
@@ -15,7 +17,7 @@ import { ToastService } from '../../../core/services/toast.service';
             aria-label="Cerrar aviso"
             (click)="toastService.dismiss(toast.id)"
           >
-            ✕
+            <app-icon name="x" [size]="16" />
           </button>
         </div>
       }

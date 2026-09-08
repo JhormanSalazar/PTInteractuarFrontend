@@ -114,8 +114,14 @@ Los iconos son de [Lucide](https://lucide.dev) (licencia ISC), pero **no** vía 
 `npm install --legacy-peer-deps` y rompería el arranque documentado más arriba. En su lugar,
 `src/app/shared/ui/icon/icon.ts` embebe los trazados de Lucide en un componente propio: mismo
 lenguaje visual (rejilla 24×24, trazo de 2, extremos redondeados), sin dependencia y sin sumar al
-bundle más que los seis iconos en uso. Para agregar uno nuevo se copian los atributos `d` de su
-SVG en lucide.dev.
+bundle más que los seis iconos en uso (`plus`, `pencil`, `trash-2`, `refresh-cw`,
+`triangle-alert`, `x`). Para agregar uno nuevo se copian los atributos `d` de su SVG en
+lucide.dev.
+
+Todos los puntos de cierre de la interfaz —los cuatro modales y el botón de descartar un aviso—
+usan el mismo icono `x`, no el carácter `✕`. Un glifo de texto depende de la fuente instalada, no
+hereda el grosor de trazo del resto de iconos y se apoya en la línea base en vez de centrarse;
+`ToastHost` tiene una prueba que falla si alguien vuelve a poner uno literal.
 
 ## Scripts npm
 
@@ -147,6 +153,7 @@ No requiere backend real ni base de datos: todos los tests usan `provideHttpClie
 - Los cuatro estados visuales del listado (`SolicitudesListPage`), inyectando un
   `SolicitudesService` simulado en cada caso.
 - `DemoFooter`: restaurar, cancelar, ocultarse ante un 404 y avisar ante otros errores.
+- `ToastHost`: que el botón de cerrar sea el icono y no un carácter, y que descarte el aviso.
 - El componente raíz (`App`): dispara el ping a `/health` y no se rompe si falla.
 
 ## Problemas frecuentes

@@ -127,8 +127,15 @@ button {
   color: var(--color-text);
 }
 
+/* Botones que solo contienen un icono (cerrar modal, descartar aviso).
+   El inline-flex centrado es lo que evita que el SVG se apoye en la linea
+   base y quede descolgado hacia arriba, como pasaria tratandolo como texto. */
 .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--space-2);
+  line-height: 0;
 }
 
 /* ---------- Acciones de fila ----------
