@@ -129,13 +129,23 @@ button {
 
 /* Botones que solo contienen un icono (cerrar modal, descartar aviso).
    El inline-flex centrado es lo que evita que el SVG se apoye en la linea
-   base y quede descolgado hacia arriba, como pasaria tratandolo como texto. */
+   base y quede descolgado hacia arriba, como pasaria tratandolo como texto.
+
+   El borde y el fondo se resetean explicitamente: un <button> trae de fabrica
+   un borde gris del navegador, y aqui se veia como una caja cuadrada
+   permanente alrededor de la X. Un boton de cerrar no necesita anunciarse con
+   un recuadro fijo; la afordancia la da el fondo que aparece al pasar el raton
+   (.btn-ghost) y el anillo de foco global al llegar por teclado. */
 .btn-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-2);
   line-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
 }
 
 /* ---------- Acciones de fila ----------
