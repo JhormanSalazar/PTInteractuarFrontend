@@ -1,15 +1,9 @@
-<main class="health-check">
-  <h1>PT Interactuar</h1>
+<a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
 
-  @if (loading()) {
-    <p>Consultando el backend...</p>
-  } @else if (error()) {
-    <p class="error">Error al contactar el backend: {{ error() }}</p>
-  } @else if (health(); as h) {
-    <p class="ok">
-      Backend: <strong>{{ h.status }}</strong> · Base de datos:
-      <strong>{{ h.database }}</strong>
-    </p>
-    <p class="timestamp">{{ h.timestamp }}</p>
-  }
+<app-loading-banner />
+
+<main id="contenido-principal">
+  <router-outlet />
 </main>
+
+<app-toast-host />

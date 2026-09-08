@@ -1,36 +1,24 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
-import { environment } from '../environments/environment';
-
-interface HealthResponse {
-  status: string;
-  database: string;
-  timestamp: string;
-}
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { ApiService } from './core/http/api.service';
+import { LoadingBanner } from './shared/ui/loading-banner/loading-banner';
+import { ToastHost } from './shared/ui/toast/toast-host';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet, LoadingBanner, ToastHost],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  private readonly http = inject(HttpClient);
-
-  protected readonly loading = signal(true);
-  protected readonly health = signal<HealthResponse | null>(null);
-  protected readonly error = signal<string | null>(null);
+  private readonly api = inject(ApiService);
 
   constructor() {
-    this.http.get<HealthResponse>(`${environment.apiUrl}/health`).subscribe({
-      next: (response) => {
-        this.health.set(response);
-        this.loading.set(false);
-      },
-      error: (err: unknown) => {
-        this.error.set(err instanceof Error ? err.message : 'No se pudo contactar al backend');
-        this.loading.set(false);
-      },
-    });
+    // Ping de calentamiento en segundo plano: despierta backend y BD (Neon
+    // en cold start) mientras el usuario mira la primera pantalla. No debe
+    // bloquear el render ni mostrar error si falla — por eso el subscribe
+    // vacio en next/error, sin async/await ni toques al estado de la UI.
+    this.api.getHealth().subscribe({ next: () => undefined, error: () => undefined });
   }
 }

@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { environment } from '../environments/environment';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
 
 describe('App', () => {
@@ -10,7 +10,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     httpMock = TestBed.inject(HttpTestingController);
@@ -20,31 +20,23 @@ describe('App', () => {
     httpMock.verify();
   });
 
-  it('should create the app', () => {
+  it('se crea y dispara el ping de calentamiento a /health en segundo plano', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
-    httpMock.expectOne(`${environment.apiUrl}/health`).flush({
-      status: 'ok',
-      database: 'ok',
-      timestamp: new Date().toISOString(),
-    });
+
+    const req = httpMock.expectOne('/health');
+    req.flush({ status: 'ok', database: 'ok', timestamp: new Date().toISOString() });
 
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render the health status once the backend responds', async () => {
+  it('no se rompe si el ping de /health falla', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    httpMock.expectOne(`${environment.apiUrl}/health`).flush({
-      status: 'ok',
-      database: 'ok',
-      timestamp: new Date().toISOString(),
-    });
-    fixture.detectChanges();
+    const req = httpMock.expectOne('/health');
+    req.flush('backend caído', { status: 503, statusText: 'Service Unavailable' });
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('PT Interactuar');
-    expect(compiled.querySelector('.ok')?.textContent).toContain('ok');
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

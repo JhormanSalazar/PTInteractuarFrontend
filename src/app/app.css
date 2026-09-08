@@ -1,19 +1,15 @@
-.health-check {
-  font-family: system-ui, sans-serif;
-  max-width: 32rem;
-  margin: 4rem auto;
-  text-align: center;
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -3rem;
+  z-index: 1200;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  border-radius: var(--radius-sm);
+  transition: top var(--transition-base);
 }
 
-.ok {
-  color: #16a34a;
-}
-
-.error {
-  color: #dc2626;
-}
-
-.timestamp {
-  color: #6b7280;
-  font-size: 0.875rem;
+.skip-link:focus-visible {
+  top: var(--space-2);
 }
